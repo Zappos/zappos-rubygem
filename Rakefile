@@ -15,7 +15,7 @@ Jeweler::Tasks.new do |gem|
   gem.name = "patron"
   gem.homepage = "http://github.com/makenai/patron"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: Ruby bindings for the Zappos API}
+  gem.summary = %Q{Ruby bindings for the Zappos API}
   gem.description = %Q{The Zappos API (called Patron) lets you hook into various Zappos functions such as product information, search, faceting and more.}
   gem.email = "pawel@zappos.com"
   gem.authors = ["Pawel Szymczykowski"]
@@ -26,21 +26,18 @@ Jeweler::Tasks.new do |gem|
 end
 Jeweler::RubygemsDotOrgTasks.new
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+require 'rspec/core'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
-require 'rcov/rcovtask'
-Rcov::RcovTask.new do |test|
-  test.libs << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+RSpec::Core::RakeTask.new(:rcov) do |spec|
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
 end
 
-task :default => :test
+task :default => :spec
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
