@@ -15,10 +15,10 @@ Jeweler::Tasks.new do |gem|
   gem.name = "patron"
   gem.homepage = "http://github.com/makenai/patron"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{TODO: Ruby bindings for the Zappos API}
+  gem.description = %Q{The Zappos API (called Patron) lets you hook into various Zappos functions such as product information, search, faceting and more.}
   gem.email = "pawel@zappos.com"
-  gem.authors = ["Pawel"]
+  gem.authors = ["Pawel Szymczykowski"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
   # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
   #  gem.add_runtime_dependency 'jabber4r', '> 0.1'
