@@ -3,7 +3,8 @@ module Zappos
     module Product
       
       def product(options={})
-        get( '/Product', options )
+        response = get( '/Product', options )
+        Zappos::Response.new( response, 'product' )
       end
       
     end

@@ -15,6 +15,7 @@ module Zappos
     def get( endpoint, params={} )
       query = encode_params( { :key => @key }.merge( params ) )
       uri = URI.parse("#{BASE_URL}#{endpoint}?#{query}")
+      puts uri
       Net::HTTP.get_response( uri )
     end
     

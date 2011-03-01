@@ -3,7 +3,8 @@ module Zappos
     module Image
 
       def image(options={})
-        get( '/Image', options )
+        response = get( '/Image', options )
+        Zappos::Response.new( response, 'images' )
       end
       
     end
