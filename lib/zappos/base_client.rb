@@ -7,7 +7,7 @@ require 'cgi'
 module Zappos
   class BaseClient
     
-    BASE_URL = 'http://api.zappos.com'
+    BASE_URL = 'http://api-a.zappos.com'
     
     protected
 
@@ -17,7 +17,7 @@ module Zappos
       uri = URI.parse("#{BASE_URL}#{endpoint}?#{query}")
       Net::HTTP.get_response( uri )
     end
-
+    
     private
     
     # Convert a hash of params into a query string
