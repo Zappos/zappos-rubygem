@@ -7,17 +7,17 @@ describe Zappos::Client do
   end
   
   context "Search API" do
-    
-    it "can search for a term" do  
+
+    it "can search for a term" do
       results = @zappos.search( :term => 'boots' )
-      results.should be_an_instance_of Hash
-      results['statusCode'].should == '200'
+      results.should be_a_kind_of Zappos::Response
+      results.success?.should == true
     end
-    
-    it "can get a product" do
-      results = @zappos.product
+
+    it "can have includes" do
+      results = @zappos.search( :term => 'boots', :includes => %q{ description videoUrl } )
     end
-    
+
   end
     
 end

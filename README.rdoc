@@ -1,8 +1,8 @@
-= patron
+= zappos
 
-Ruby bindings for the Zappos API (codenamed Patron). Give it a shot!
+Ruby bindings for the Zappos API (codenamed Patron). Patron: give it a shot!
 
-== Contributing to patron
+== Contributing to zappos
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it

@@ -1,3 +1,4 @@
+require File.expand_path(File.dirname(__FILE__) + '/response')
 require 'net/http'
 require 'json'
 require 'uri'
@@ -13,9 +14,8 @@ module Zappos
     # Make a get request and return a hash
     def get( endpoint, params={} )
       query = encode_params( { :key => @key }.merge( params ) )
-      url = "#{BASE_URL}#{endpoint}?#{query}"
-      response = Net::HTTP.get_response( URI.parse(url) ).body.to_s
-      return JSON.parse( response )
+      uri = URI.parse("#{BASE_URL}#{endpoint}?#{query}")
+      Net::HTTP.get_response( uri )
     end
 
     private

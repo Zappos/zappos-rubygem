@@ -3,7 +3,8 @@ module Zappos
     module Search
       
       def search(options={})
-        get( '/Search', options )
+        response = get( '/Search', options )
+        Zappos::Response.new( response, 'results' )
       end
       
     end
