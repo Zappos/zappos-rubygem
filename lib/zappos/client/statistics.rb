@@ -1,4 +1,4 @@
-module Patron
+module Zappos
   class Client
     module Statistics
 

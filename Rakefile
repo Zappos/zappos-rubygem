@@ -12,8 +12,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "patron"
-  gem.homepage = "http://github.com/makenai/patron"
+  gem.name = "zappos"
+  gem.homepage = "http://github.com/makenai/zappos"
   gem.license = "MIT"
   gem.summary = %Q{Ruby bindings for the Zappos API}
   gem.description = %Q{The Zappos API (called Patron) lets you hook into various Zappos functions such as product information, search, faceting and more.}
@@ -44,7 +44,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "patron #{version}"
+  rdoc.title = "zappos #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

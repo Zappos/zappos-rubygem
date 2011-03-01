@@ -3,7 +3,7 @@ require 'json'
 require 'uri'
 require 'cgi'
 
-module Patron
+module Zappos
   class BaseClient
     
     BASE_URL = 'http://api.zappos.com'

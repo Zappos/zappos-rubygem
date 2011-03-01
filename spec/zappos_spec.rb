@@ -1,9 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Patron do
+describe Zappos do
   
   it "Returns a client" do
-    patron = Patron.client( API_KEY ).should be_an_instance_of( Patron::Client )
+    zappos = Zappos.client( API_KEY ).should be_an_instance_of( Zappos::Client )
   end
   
 end
