@@ -7,7 +7,7 @@ require 'cgi'
 module Zappos
   class BaseClient
     
-    BASE_URL = 'http://api-a.zappos.com'
+    BASE_URL = 'http://api.zappos.com'
     
     protected
 
