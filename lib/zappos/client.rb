@@ -4,8 +4,11 @@ module Zappos
   
   class Client < BaseClient
     
+    BASE_URL = 'http://api.zappos.com'
+    
     def initialize(key, options={})
       @key = key
+      @base_url = options[:base_url] || BASE_URL
     end
 
     Dir[ File.expand_path('../client/*.rb', __FILE__) ].each{ |f| require f }

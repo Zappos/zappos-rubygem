@@ -6,15 +6,13 @@ require 'cgi'
 
 module Zappos
   class BaseClient
-    
-    BASE_URL = 'http://api.zappos.com'
-    
+        
     protected
 
     # Make a get request and return a hash
     def get( endpoint, params={} )
       query = encode_params( { :key => @key }.merge( params ) )
-      uri = URI.parse("#{BASE_URL}#{endpoint}?#{query}")
+      uri = URI.parse("#{@base_url}#{endpoint}?#{query}")
       puts uri
       Net::HTTP.get_response( uri )
     end
