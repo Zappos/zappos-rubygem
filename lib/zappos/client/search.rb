@@ -4,7 +4,11 @@ module Zappos
       
       def search(options={})
         response = get( '/Search', options )
-        Zappos::Response.new( response, 'results' )
+        if options[:batch]
+          Zappos::Response.new( response, 'batchResults' )
+        else
+          Zappos::Response.new( response, 'results' )
+        end
       end
       
     end

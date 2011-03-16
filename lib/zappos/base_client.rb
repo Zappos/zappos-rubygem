@@ -11,7 +11,15 @@ module Zappos
 
     # Make a get request and return a hash
     def get( endpoint, params={} )
-      query = encode_params( { :key => @key }.merge( params ) )
+      query = if params[:batch]
+        batch_sets = []
+        params[:batch].each do |set|
+          batch_sets << encode_params( set )
+        end
+        encode_params( { :key => @key }.merge({ :batch => batch_sets }) )
+      else
+        encode_params( { :key => @key }.merge( params ) )
+      end
       uri = URI.parse("#{@base_url}#{endpoint}?#{query}")
       puts uri
       Net::HTTP.get_response( uri )
