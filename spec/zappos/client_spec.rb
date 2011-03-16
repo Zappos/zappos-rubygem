@@ -28,11 +28,11 @@ describe Zappos::Client do
       # ]&key=78f7484fa8e3811432330cd542c208e1
       results = @zappos.search(
         :batch => [
-          { :filters => { :txAttrFacet_ShortStyles => ['Bermuda'], :sort => { :recentSales => 'desc' } } },
-          { :filters => { :subCategoryFacet => ['Skirts'], :sort => { :recentSales => 'desc' } } },
-          { :filters => { :zc2 => ['Sunglasses'], :sort => { :recentSales => 'desc' } } },
-          { :filters => { :zc2 => ['Sandals'], :sort => { :recentSales => 'desc' } } },
-          { :filters => { :txAttrFacet_DressTypes => ['Shirt+Dresses'], :sort => { :recentSales => 'desc' } } }
+          { :filters => { :txAttrFacet_ShortStyles => ['Bermuda'] }, :sort => { :recentSales => 'desc' }},
+          { :filters => { :subCategoryFacet => ['Skirts'] }, :sort => { :recentSales => 'desc' } },
+          { :filters => { :zc2 => ['Sunglasses'] }, :sort => { :recentSales => 'desc' } },
+          { :filters => { :zc2 => ['Sandals'] }, :sort => { :recentSales => 'desc' } },
+          { :filters => { :txAttrFacet_DressTypes => ['Shirt+Dresses'] }, :sort => { :recentSales => 'desc' } }
         ]
       )
       results.should be_a_kind_of Zappos::Response
