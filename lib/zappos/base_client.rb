@@ -39,7 +39,8 @@ module Zappos
     
     def post(endpoint, get_params = {}, post_params = {}, ssl = false)
       get_params = encode_params( { :key => @key }.merge( get_params ) )
-      uri = URI.parse("#{ssl ? "https" : "http"}://#{endpoint}?#{get_params}")
+      uri = URI.parse("#{ssl ? "https" : "http"}://#{@base_url}#{endpoint}?#{get_params}")
+      puts uri
       
       if ssl
         http = Net::HTTP.new(uri.host, uri.port)

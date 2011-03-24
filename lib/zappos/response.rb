@@ -12,7 +12,7 @@ module Zappos
 
     # True if we had a successful response
     def success?
-      @response.code == '200'
+      (200..299) === @response.code.to_i
     end
 
     # Returns the error message for failed requests
