@@ -4,7 +4,7 @@ module Zappos
   
   class Client < BaseClient
     
-    BASE_URL = 'http://api.zappos.com'
+    BASE_URL = 'api.zappos.com'
     
     def initialize(key, options={})
       @key = key

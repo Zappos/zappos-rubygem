@@ -1,5 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/response')
 require 'net/http'
+require 'net/https'
 require 'json'
 require 'uri'
 require 'cgi'
@@ -10,7 +11,7 @@ module Zappos
     protected
 
     # Make a get request and return a hash
-    def get( endpoint, params={} )
+    def get( endpoint, params={}, ssl = false )
       query = if params[:batch]
         batch_sets = []
         params[:batch].each do |set|
@@ -20,9 +21,37 @@ module Zappos
       else
         encode_params( { :key => @key }.merge( params ) )
       end
-      uri = URI.parse("#{@base_url}#{endpoint}?#{query}")
+
+      uri = URI.parse("#{ssl ? "https" : "http"}://#{@base_url}#{endpoint}?#{query}")
       puts uri
-      Net::HTTP.get_response( uri )
+      
+      if ssl
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+        request = Net::HTTP::Get.new(uri.request_uri)
+        http.request(request)
+      else
+        Net::HTTP.get_response( uri )
+      end
+    end
+    
+    def post(endpoint, get_params = {}, post_params = {}, ssl = false)
+      get_params = encode_params( { :key => @key }.merge( get_params ) )
+      uri = URI.parse("#{ssl ? "https" : "http"}://#{endpoint}?#{get_params}")
+      
+      if ssl
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+        request = Net::HTTP::Post.new(uri.request_uri)
+        request.set_form_data(post_params)
+        http.request(request)
+      else
+        Net::HTTP.post_form(uri, post_params)
+      end
     end
     
     private
