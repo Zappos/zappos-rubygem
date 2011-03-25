@@ -4,7 +4,7 @@ module Zappos
 
       def review(options={})
         response = get( '/Review', options )
-        Zappos::Response.new( response, 'reviews' )
+        Zappos::Response.new( response )
       end
             
     end

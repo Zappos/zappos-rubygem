@@ -23,7 +23,6 @@ module Zappos
       end
 
       uri = URI.parse("#{ssl ? "https" : "http"}://#{@base_url}#{endpoint}?#{query}")
-      puts uri
       
       if ssl
         http = Net::HTTP.new(uri.host, uri.port)

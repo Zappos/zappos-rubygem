@@ -4,7 +4,7 @@ module Zappos
 
       def similarity(options={})
         response = get( '/Search/Similarity', options )
-        Zappos::Response.new( response, 'results' )
+        Zappos::Response.new( response )
       end
       
     end

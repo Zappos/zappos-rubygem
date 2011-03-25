@@ -1,18 +1,22 @@
 require 'json'
+require 'hashie'
 
 module Zappos
   class Response
+    
+    attr_accessor :data
 
     #:nodoc
     def initialize( response, envelope=nil )
-      @response=response
-      @data = JSON.parse( @response.body )
-      @envelope=envelope
+      @response = response
+      data = JSON.parse( @response.body )
+      @data = Hashie::Mash.new( data )
+      @envelope = envelope
     end
 
     # True if we had a successful response
     def success?
-      (200..299) === @response.code.to_i
+      (200..299).include?( @response.code.to_i )
     end
 
     # Returns the error message for failed requests
@@ -20,27 +24,16 @@ module Zappos
       @data['message'] unless success?
     end
 
-    # Return the array of result items
-    def results
-      data = @envelope ? @data[ @envelope ] : @data
-      data.is_a?( Array ) ? data : [ data ]
-    end
-
     # Total number of results possible
     def total_results
       @data['totalResultCount']
     end
-
-    # Number of items in the response
-    def length
-      results.length
-    end
-
-    # Iterate over each result
-    def each
-      results.each do |item|
-        yield item
-      end
+    
+    #:nodoc
+    def method_missing(sym, *args, &block)
+      key = sym.to_s
+      return @data[ key ] if @data.key?( key )
+      super(sym, *args, &block)
     end
 
   end

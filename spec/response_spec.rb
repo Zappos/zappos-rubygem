@@ -5,24 +5,25 @@ describe Zappos::Response do
   context "valid response" do
 
     before do
-      @zappos = Zappos::Client.new( API_KEY )
-      @response = @zappos.search( :term => 'cat' )
+      http_response = stub_http_response_with('product_response.json')
+      @response = Zappos::Response.new( http_response, 'product' )
     end
 
     it "has results" do
-      @response.results.should be_an( Array )
+      @response.product.should be_an( Array )
     end
 
     it "has an iterator" do
-      @response.each do |product|
+      @response.product.each do |product|
         product.should be_a( Hash )
       end
     end
-
-    it "has a length" do
-      @response.length.should be_an( Integer )
-      @response.length.should == @response.results.length
+    
+    it "has an object-like interface" do
+      @response.product.first.productName.should == "Chuck Taylor Vintage Slip"
+      @response.product.first.styles.first.color.should == "Athletic Navy"
     end
+    
 
   end
 

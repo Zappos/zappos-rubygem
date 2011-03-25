@@ -4,7 +4,7 @@ module Zappos
 
       def image(options={})
         response = get( '/Image', options )
-        Zappos::Response.new( response, 'images' )
+        Zappos::Response.new( response )
       end
       
     end

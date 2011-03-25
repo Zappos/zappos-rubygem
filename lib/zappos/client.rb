@@ -17,7 +17,7 @@ module Zappos
     include Zappos::Client::Image
     include Zappos::Client::Statistics
     include Zappos::Client::Brand
-    include Zappos::Client::Review    
+    include Zappos::Client::Review
     include Zappos::Client::AutoComplete
     include Zappos::Client::CoreValue
     include Zappos::Client::Similarity
