@@ -55,6 +55,24 @@ module Zappos
       end
     end
     
+    def put(endpoint, get_params = {}, put_params = {}, ssl = false)
+      get_params = encode_params( { :key => @key }.merge( get_params ) )
+      uri = URI.parse("#{ssl ? "https" : "http"}://#{@base_url}#{endpoint}?#{get_params}")
+      puts uri
+      
+      if ssl
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+        request = Net::HTTP::Put.new(uri.request_uri)
+        request.set_form_data(put_params)
+        http.request(request)
+      else
+        Net::HTTP.post_form(uri, put_params)
+      end
+    end
+    
     private
     
     # Convert a hash of params into a query string
