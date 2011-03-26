@@ -9,70 +9,86 @@ module Zappos
   class BaseClient
         
     protected
+    
+    # Master request method
+    def request( method, endpoint, query_params, body_params, ssl )
+      
+      uri = URI::HTTP.build(
+        :scheme => ssl ? 'https' : 'http',
+        :host   => @base_url,
+        :path   => endpoint
+      )
+      if query_params
+        uri.query = encode_params( { :key => @key }.merge( query_params ) )
+      end
 
-    # Make a get request and return a hash
-    def get( endpoint, params={}, ssl = false )
-      query = if params[:batch]
+      request = Net::HTTP.const_get( method.to_s.capitalize ).new( uri.request_uri )
+      if body_params
+        request.set_form_data( body_params )
+      end
+
+      http = Net::HTTP.new( uri.host, uri.port )
+      if ssl
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      
+      # TODO: Send some headers?
+      # User-Agent
+      # {:accept => '*/*; q=0.5, application/xml', :accept_encoding => 'gzip, deflate'}
+      
+      http.request( request )
+    end
+    
+    # HTTP methods
+    
+    def get( endpoint, query_params={}, body_params={}, ssl=false )
+      convert_batch_params( query_params )
+      request( 'Get', endpoint, query_params, body_params, ssl )
+    end
+        
+    def post( endpoint, query_params={}, body_params={}, ssl=false )
+      request( 'Post', endpoint, query_params, post_params, ssl )
+    end
+
+    def put( endpoint, query_params={}, body_params={}, ssl=false )
+      request( 'Put', endpoint, query_params, post_params, ssl )
+    end
+
+    def delete( endpoint, query_params={}, body_params={}, ssl=false )
+      request( 'Delete', endpoint, query_params, post_params, ssl )
+    end
+    
+    # Bacon-wrapped convenience methods
+    
+    def get_response( *args )
+      Zappos::Response.new( get( *args ) )
+    end
+
+    def post_response( *args )
+      Zappos::Response.new( post( *args ) )
+    end
+
+    def put_response( *args )
+      Zappos::Response.new( put( *args ) )      
+    end
+
+    def delete_response( *args )
+      Zappos::Response.new( delete( *args ) )      
+    end
+            
+    private
+    
+    # Batch queries must have their parameters encoded specially
+    def convert_batch_params( params )
+      if params[:batch]
         batch_sets = []
         params[:batch].each do |set|
           batch_sets << encode_params( set )
         end
-        encode_params( { :key => @key }.merge({ :batch => batch_sets }) )
-      else
-        encode_params( { :key => @key }.merge( params ) )
-      end
-
-      uri = URI.parse("#{ssl ? "https" : "http"}://#{@base_url}#{endpoint}?#{query}")
-      
-      if ssl
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-        request = Net::HTTP::Get.new(uri.request_uri)
-        http.request(request)
-      else
-        Net::HTTP.get_response( uri )
+        params[:batch] = batch_sets
       end
     end
-    
-    def post(endpoint, get_params = {}, post_params = {}, ssl = false)
-      get_params = encode_params( { :key => @key }.merge( get_params ) )
-      uri = URI.parse("#{ssl ? "https" : "http"}://#{@base_url}#{endpoint}?#{get_params}")
-      puts uri
-      
-      if ssl
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-        request = Net::HTTP::Post.new(uri.request_uri)
-        request.set_form_data(post_params)
-        http.request(request)
-      else
-        Net::HTTP.post_form(uri, post_params)
-      end
-    end
-    
-    def put(endpoint, get_params = {}, put_params = {}, ssl = false)
-      get_params = encode_params( { :key => @key }.merge( get_params ) )
-      uri = URI.parse("#{ssl ? "https" : "http"}://#{@base_url}#{endpoint}?#{get_params}")
-      puts uri
-      
-      if ssl
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-        request = Net::HTTP::Put.new(uri.request_uri)
-        request.set_form_data(put_params)
-        http.request(request)
-      else
-        Net::HTTP.post_form(uri, put_params)
-      end
-    end
-    
-    private
     
     # Convert a hash of params into a query string
     def encode_params( params )

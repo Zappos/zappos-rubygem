@@ -3,7 +3,7 @@ module Zappos
     module CoreValue
 
       def core_value(options={})
-        get( '/CoreValue', options )
+        get_response( '/CoreValue', options )
       end
       
     end

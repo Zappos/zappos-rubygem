@@ -3,7 +3,7 @@ module Zappos
     module Brand
 
       def brand(options={})
-        get( '/Brand', options )
+        get_response( '/Brand', options )
       end
 
     end

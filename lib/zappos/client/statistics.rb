@@ -3,7 +3,7 @@ module Zappos
     module Statistics
 
       def statistics(options={})
-        get( '/Statistics', options )
+        get_response( '/Statistics', options )
       end
 
     end

@@ -6,7 +6,7 @@ describe Zappos::Response do
 
     before do
       http_response = stub_http_response_with('product_response.json')
-      @response = Zappos::Response.new( http_response, 'product' )
+      @response = Zappos::Response.new( http_response )
     end
 
     it "has results" do

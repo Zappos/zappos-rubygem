@@ -7,11 +7,10 @@ module Zappos
     attr_accessor :data
 
     #:nodoc
-    def initialize( response, envelope=nil )
+    def initialize( response )
       @response = response
       data = JSON.parse( @response.body )
       @data = Hashie::Mash.new( data )
-      @envelope = envelope
     end
 
     # True if we had a successful response
@@ -30,7 +29,7 @@ module Zappos
     end
     
     #:nodoc
-    def method_missing(sym, *args, &block)
+    def method_missing( sym, *args, &block )
       key = sym.to_s
       return @data[ key ] if @data.key?( key )
       super(sym, *args, &block)
