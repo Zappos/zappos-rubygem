@@ -13,11 +13,12 @@ module Zappos
     # Master request method
     def request( method, endpoint, query_params, body_params, ssl )
       
-      uri = URI::HTTP.build(
+      uri = (ssl ? URI::HTTPS : URI::HTTP).build(
         :scheme => ssl ? 'https' : 'http',
-        :host   => @base_url,
-        :path   => endpoint
+        :host => @base_url,
+        :path => endpoint
       )
+      
       if query_params
         uri.query = encode_params( { :key => @key }.merge( query_params ) )
       end
@@ -32,6 +33,8 @@ module Zappos
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
+      
+      puts uri
       
       # TODO: Send some headers?
       # User-Agent
@@ -48,15 +51,15 @@ module Zappos
     end
         
     def post( endpoint, query_params={}, body_params={}, ssl=false )
-      request( 'Post', endpoint, query_params, post_params, ssl )
+      request( 'Post', endpoint, query_params, body_params, ssl )
     end
 
     def put( endpoint, query_params={}, body_params={}, ssl=false )
-      request( 'Put', endpoint, query_params, post_params, ssl )
+      request( 'Put', endpoint, query_params, body_params, ssl )
     end
 
     def delete( endpoint, query_params={}, body_params={}, ssl=false )
-      request( 'Delete', endpoint, query_params, post_params, ssl )
+      request( 'Delete', endpoint, query_params, body_params, ssl )
     end
     
     # Bacon-wrapped convenience methods
