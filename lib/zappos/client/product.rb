@@ -3,7 +3,7 @@ module Zappos
     module Product
       
       def product(options={})
-        get_response( '/Product', options )
+        get_response( '/Product', :query_params => options )
       end
       
     end

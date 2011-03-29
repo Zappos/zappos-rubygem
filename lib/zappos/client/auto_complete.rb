@@ -3,7 +3,7 @@ module Zappos
     module AutoComplete
       
       def auto_complete(options={})
-        get_response( '/AutoComplete', options )
+        get_response( '/AutoComplete', :query_params => options )
       end
       
     end

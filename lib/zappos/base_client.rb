@@ -1,106 +1,87 @@
+require File.expand_path(File.dirname(__FILE__) + '/request')
 require File.expand_path(File.dirname(__FILE__) + '/response')
-require 'net/http'
-require 'net/https'
-require 'json'
-require 'uri'
-require 'cgi'
+require File.expand_path(File.dirname(__FILE__) + '/paginated_response')
 
 module Zappos
-  class BaseClient
-        
-    protected
+  class BaseClient #:nodoc:all
     
-    # Master request method
-    def request( method, endpoint, query_params, body_params, ssl )
-      
-      uri = URI::HTTP.build(
-        :scheme => ssl ? 'https' : 'http',
-        :host   => @base_url,
-        :path   => endpoint
-      )
-      if query_params
-        uri.query = encode_params( { :key => @key }.merge( query_params ) )
-      end
-
-      request = Net::HTTP.const_get( method.to_s.capitalize ).new( uri.request_uri )
-      if body_params
-        request.set_form_data( body_params )
-      end
-
-      http = Net::HTTP.new( uri.host, uri.port )
-      if ssl
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-      
-      # TODO: Send some headers?
-      # User-Agent
-      # {:accept => '*/*; q=0.5, application/xml', :accept_encoding => 'gzip, deflate'}
-      
-      http.request( request )
+    # Execute a Zappos::Request object and return a wrapped Zappos::Reponse
+    def execute( request )
+      if response = request.execute()
+        response_class = request.response_class ? Zappos.const_get( request.response_class ) : Zappos::Response;
+        response_class.new( self, request, response )
+      end      
     end
     
+    protected
+
+    # Create a request
+    def request( method, endpoint, options={} )
+      request = Zappos::Request.new( method, @base_url, endpoint )
+      if options[:ssl]
+        request.use_ssl = true
+      end
+      query_params = options[:query_params] || {}
+      # Per Jimmy, it's best to pass the key in they query params      
+      request.query_params = { :key => @key }.merge( query_params )
+      if options[:body_params]
+        request.body_params = options[:body_params]
+      end
+      if options[:response_class]
+        request.response_class = options[:response_class]
+      end
+      request
+    end
+        
     # HTTP methods
     
-    def get( endpoint, query_params={}, body_params={}, ssl=false )
-      convert_batch_params( query_params )
-      request( 'Get', endpoint, query_params, body_params, ssl )
+    def get( endpoint, options={} )
+      convert_batch_params( options[:query_params] )
+      request( 'Get', endpoint, options )
     end
         
-    def post( endpoint, query_params={}, body_params={}, ssl=false )
-      request( 'Post', endpoint, query_params, post_params, ssl )
+    def post( endpoint, options={} )
+      request( 'Post', endpoint, options )
     end
 
-    def put( endpoint, query_params={}, body_params={}, ssl=false )
-      request( 'Put', endpoint, query_params, post_params, ssl )
+    def put( endpoint, options={} )
+      request( 'Put', endpoint, options )
     end
 
-    def delete( endpoint, query_params={}, body_params={}, ssl=false )
-      request( 'Delete', endpoint, query_params, post_params, ssl )
+    def delete( endpoint, options={} )
+      request( 'Delete', endpoint, options )
     end
     
     # Bacon-wrapped convenience methods
     
-    def get_response( *args )
-      Zappos::Response.new( get( *args ) )
+    def get_response( endpoint, options={} )
+      execute( get( endpoint, options ) )
     end
 
-    def post_response( *args )
-      Zappos::Response.new( post( *args ) )
+    def post_response( endpoint, options={} )
+      execute( post( endpoint, options ) )
     end
 
-    def put_response( *args )
-      Zappos::Response.new( put( *args ) )      
+    def put_response( endpoint, options={} )
+      execute( put( endpoint, options ) )
     end
 
-    def delete_response( *args )
-      Zappos::Response.new( delete( *args ) )      
+    def delete_response( endpoint, options={} )
+      execute( delete( endpoint, options ) )
     end
             
     private
     
     # Batch queries must have their parameters encoded specially
     def convert_batch_params( params )
+      return unless params
       if params[:batch]
         batch_sets = []
         params[:batch].each do |set|
-          batch_sets << encode_params( set )
+          batch_sets << Zappos::Request.encode_params( set )
         end
         params[:batch] = batch_sets
       end
-    end
-    
-    # Convert a hash of params into a query string
-    def encode_params( params )
-      pairs = []
-      params.each_pair do |key,value|
-        if value.is_a?( Hash ) || value.is_a?( Array )
-          pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(JSON.generate(value))}"
-        else
-          pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_s)}"
-        end
-      end
-      return pairs.join('&')
     end
     
   end

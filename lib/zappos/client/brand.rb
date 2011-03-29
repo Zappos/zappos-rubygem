@@ -3,7 +3,7 @@ module Zappos
     module Brand
 
       def brand(options={})
-        get_response( '/Brand', options )
+        get_response( '/Brand', :query_params => options )
       end
 
     end

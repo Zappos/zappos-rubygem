@@ -5,9 +5,10 @@ module Zappos
   class Response
     
     attr_accessor :data
-
-    #:nodoc
-    def initialize( response )
+    
+    def initialize( client, request, response ) #:nodoc
+      @client   = client
+      @request  = request
       @response = response
       data = JSON.parse( @response.body )
       @data = Hashie::Mash.new( data )
@@ -22,14 +23,19 @@ module Zappos
     def error
       @data['message'] unless success?
     end
-
-    # Total number of results possible
-    def total_results
-      @data['totalResultCount']
+    
+    # Return the URI for the request that generated this response
+    def request_uri
+      @request.uri
     end
     
-    #:nodoc
-    def method_missing( sym, *args, &block )
+    # Support array notation
+    def []( key )
+      @data[ key ]
+    end
+    
+    # Magical catch-all delegating to the data for methods like response.totalResults
+    def method_missing( sym, *args, &block ) #:nodoc:
       key = sym.to_s
       return @data[ key ] if @data.key?( key )
       super(sym, *args, &block)

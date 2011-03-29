@@ -5,6 +5,7 @@ module Zappos
   class Client < BaseClient
     
     BASE_URL = 'api.zappos.com'
+    VERSION  = File.open(File.dirname(__FILE__) + "/../../VERSION").read  rescue 'unknown'
     
     def initialize(key, options={})
       @key = key

@@ -3,7 +3,7 @@ module Zappos
     module CoreValue
 
       def core_value(options={})
-        get_response( '/CoreValue', options )
+        get_response( '/CoreValue', :query_params => options )
       end
       
     end

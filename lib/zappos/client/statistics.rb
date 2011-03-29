@@ -3,7 +3,7 @@ module Zappos
     module Statistics
 
       def statistics(options={})
-        get_response( '/Statistics', options )
+        get_response( '/Statistics', :query_params => options )
       end
 
     end

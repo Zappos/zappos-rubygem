@@ -3,7 +3,7 @@ module Zappos
     module Similarity
 
       def similarity(options={})
-        get_response( '/Search/Similarity', options )
+        get_response( '/Search/Similarity', :query_params => options )
       end
       
     end

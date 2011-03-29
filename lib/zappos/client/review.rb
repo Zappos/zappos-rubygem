@@ -3,7 +3,7 @@ module Zappos
     module Review
 
       def review(options={})
-        get_response( '/Review', options )
+        get_response( '/Review', :query_params => options )
       end
             
     end

@@ -3,7 +3,7 @@ module Zappos
     module Image
 
       def image(options={})
-        get_response( '/Image', options )
+        get_response( '/Image', :query_params => options )
       end
       
     end

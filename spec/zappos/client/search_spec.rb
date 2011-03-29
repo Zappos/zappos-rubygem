@@ -22,7 +22,7 @@ describe Zappos::Client::Search do
     results.results.first.should have_key('description')
     results.results.first.should have_key('videoUrl')
   end
-    
+      
   it "can do a batch search" do
     # http://api.zappos.com/Search?batch=[
     #   filters={"txAttrFacet_ShortStyles":["Bermuda"]}%26sort={"recentSales":"desc"},
