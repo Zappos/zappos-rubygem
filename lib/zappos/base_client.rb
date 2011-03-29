@@ -5,7 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + '/paginated_response')
 module Zappos
   class BaseClient #:nodoc:all
     
-    # Execute a Zappos::Request object and return a wrapped Zappos::Reponse
+    # Execute a Zappos::Request object and return a wrapped Zappos::Response
     def execute( request )
       if response = request.execute()
         response_class = request.response_class ? Zappos.const_get( request.response_class ) : Zappos::Response;
@@ -14,6 +14,11 @@ module Zappos
     end
     
     protected
+    
+    # Override to provide credentials that get injected into the query string
+    def credentials
+      {}
+    end
 
     # Create a request
     def request( method, endpoint, options={} )
@@ -23,7 +28,7 @@ module Zappos
       end
       query_params = options[:query_params] || {}
       # Per Jimmy, it's best to pass the key in they query params      
-      request.query_params = { :key => @key }.merge( query_params )
+      request.query_params = credentials.merge( query_params )
       if options[:body_params]
         request.body_params = options[:body_params]
       end
@@ -33,7 +38,9 @@ module Zappos
       request
     end
         
-    # HTTP methods
+    # --------------------
+    # HTTP request methods
+    # --------------------
     
     def get( endpoint, options={} )
       convert_batch_params( options[:query_params] )
@@ -52,7 +59,9 @@ module Zappos
       request( 'Delete', endpoint, options )
     end
     
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Bacon-wrapped convenience methods
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def get_response( endpoint, options={} )
       execute( get( endpoint, options ) )

@@ -60,7 +60,7 @@ module Zappos
     # Generate and return a new Net::HTTP request
     def request()
       request = Net::HTTP.const_get( @method.to_s.capitalize ).new( uri.request_uri )
-      request.add_field("User-Agent", "zappos_rb #{Zappos::Client::VERSION}")
+      request.add_field("User-Agent", "zappos_rb v#{Zappos::Client.version}")
       if @body_params
         request.set_form_data( @body_params )
       end
