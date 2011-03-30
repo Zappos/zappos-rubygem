@@ -32,14 +32,13 @@ module Zappos
         product = _get_product_stocks( product_id )
         # The keys don't matter, so let's convert to an array
         dimension_value_ids = dimension_value_ids.values if dimension_value_ids.is_a?( Hash )
-        
+        # We'll chip away at this list until we've found what we want.
         stocks = product.sizing.stockData.clone()
         # Filter on color
         if color_id
           color = color_id.to_s
           stocks.delete_if { |s| s.color != color }
         end
-        
         # Filter on any dimensions given
         dimension_value_ids.each do |value_id|
           # This is kind of primitive..
