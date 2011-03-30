@@ -28,7 +28,7 @@ module Zappos
       end
       
       # Given a product_id, color_id and dimension_id Hash or Array, return the stock object
-      def find_stocks( product_id, color_id=nil, dimension_value_ids=[] )
+      def find_product_stocks( product_id, color_id=nil, dimension_value_ids=[] )
         product = _get_product_stocks( product_id )
         # The keys don't matter, so let's convert to an array
         dimension_value_ids = dimension_value_ids.values if dimension_value_ids.is_a?( Hash )

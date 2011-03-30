@@ -31,7 +31,7 @@ describe Zappos::Client::Product do
       
     it "can look up a stock by color_id and dimension_ids array" do
       # Array dimensions
-      stocks = @zappos.find_stocks( 7217113, 1777, [ 60902, 60558 ] )
+      stocks = @zappos.find_product_stocks( 7217113, 1777, [ 60902, 60558 ] )
       stocks.should be_an Array
       stocks.length.should == 1
       stocks.first.id.should == "16862385"
@@ -39,7 +39,7 @@ describe Zappos::Client::Product do
 
     it "can look up a stock by color_id and dimension_ids hash" do
       # Hash dimensions
-      stocks = @zappos.find_stocks( 7217113, 241863, { :d3 => 60903, :d4 => 60558 } )
+      stocks = @zappos.find_product_stocks( 7217113, 241863, { :d3 => 60903, :d4 => 60558 } )
       stocks.should be_an Array
       stocks.length.should == 1
       stocks.first.id.should == "10684487"
@@ -47,7 +47,7 @@ describe Zappos::Client::Product do
       
     it "can return partial matches" do
       # Partial matches (because I just specified one of the dimensions)
-      stocks = @zappos.find_stocks( 7217113, 11366, [ 60558 ])
+      stocks = @zappos.find_product_stocks( 7217113, 11366, [ 60558 ])
       stocks.should be_an Array
       stocks.length.should == 13
     end
