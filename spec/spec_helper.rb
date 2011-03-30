@@ -22,6 +22,13 @@ def stub_http_response_with(filename)
   response
 end
 
+def stub_client_response_with( zappos, filename )
+  response = stub_http_response_with( filename )
+  zappos.stub!( :execute ).and_return(
+    Zappos::Response.new( zappos, nil, response )
+  )
+end
+
 RSpec.configure do |config|
   
 end
