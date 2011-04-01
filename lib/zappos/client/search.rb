@@ -13,7 +13,7 @@ module Zappos
       
       def search_facet_values( facet )
         response = get_response( '/Search', :query_params => { :facets => [ facet ], :excludes => [ 'results' ] } )
-        response.facets.first.values rescue nil
+        response.facets.first[:values] rescue nil
       end
       
     end

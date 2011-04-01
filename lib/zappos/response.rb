@@ -29,6 +29,11 @@ module Zappos
       @request.uri
     end
     
+    # Return the raw unparsed response body
+    def body
+      @response.body
+    end
+    
     # Support array notation
     def []( key )
       @data[ key ]
