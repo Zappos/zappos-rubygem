@@ -84,7 +84,7 @@ module Zappos
       pairs = []
       params.each_pair do |key,value|
         if value.is_a?( Hash ) || value.is_a?( Array )
-          pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(JSON.generate(value))}"
+          pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_json)}"
         else
           pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_s)}"
         end
