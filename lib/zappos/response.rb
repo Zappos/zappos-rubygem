@@ -7,21 +7,32 @@ module Zappos
     attr_accessor :data
     
     def initialize( client, request, response ) #:nodoc
-      @client   = client
-      @request  = request
-      @response = response
-      data = JSON.parse( @response.body )
+      @client      = client
+      @request     = request
+      @response    = response
+      data = begin
+        JSON.parse( @response.body )
+      rescue JSON::ParserError
+        @parse_error = true
+        { :error => "JSON Parser Error:\n#{@response.body}" }
+      end
       @data = Hashie::Mash.new( data )
     end
 
     # True if we had a successful response
     def success?
-      (200..299).include?( @response.code.to_i )
+      (200..299).include?( code )
+    end
+    
+    # Returns true if there was a parse error
+    def parse_error?
+      @parse_error ? true : false
     end
 
     # Returns the error message for failed requests
     def error
-      @data['message'] unless success?
+      return if success? unless parse_error?
+      @data['error'] || @data['message']
     end
     
     # Return the URI for the request that generated this response
@@ -32,6 +43,16 @@ module Zappos
     # Return the raw unparsed response body
     def body
       @response.body
+    end
+    
+    # Return the HTTP response code
+    def code
+      @response.code.to_i
+    end
+    
+    # Return the raw Net:HTTPResponse object
+    def response
+      @response
     end
     
     # Support array notation

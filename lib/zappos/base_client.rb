@@ -13,10 +13,20 @@ module Zappos
       end      
     end
     
+    # Allows you to call an arbitrary endpoint if you're feeling frisky
+    def call_endpoint( method, endpoint, options={} )
+      execute( request( method, endpoint, options ) )
+    end
+            
     protected
     
     # Override to provide credentials that get injected into the query string
     def credentials
+      {}
+    end
+    
+    # Ditto.. override to add cookies to the request
+    def cookies
       {}
     end
 
@@ -26,9 +36,14 @@ module Zappos
       if options[:ssl]
         request.use_ssl = true
       end
+
+      # Per Jimmy, it's best to pass the key in they query params
       query_params = options[:query_params] || {}
-      # Per Jimmy, it's best to pass the key in they query params      
       request.query_params = credentials.merge( query_params )
+
+      # If we have cookies for the request, set them here
+      request.cookies = cookies
+      
       if options[:body_params]
         request.body_params = options[:body_params]
       end
@@ -78,7 +93,7 @@ module Zappos
     def delete_response( endpoint, options={} )
       execute( delete( endpoint, options ) )
     end
-            
+    
     private
     
     # Batch queries must have their parameters encoded specially

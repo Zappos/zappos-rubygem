@@ -90,5 +90,33 @@ describe Zappos::Response do
     end
 
   end
+  
+  context "error handling" do
+    
+    it "can handle error errors" do
+      http_response = stub_http_response_with( 'error_response.json', 500 )
+      response = Zappos::Response.new( nil, nil, http_response )
+      response.error.should be_a_kind_of String
+    end
+
+    it "can handle message errors" do
+      http_response = stub_http_response_with( 'message_response.json', 500 )
+      response = Zappos::Response.new( nil, nil, http_response )
+      response.error.should be_a_kind_of String
+    end
+    
+    it "can handle things that aren't json" do
+      http_response = stub_http_response_with( 'not_json.txt', 500 )
+      response = Zappos::Response.new( nil, nil, http_response )
+      response.error.should be_a_kind_of String
+    end
+
+    it "can handle things that aren't json and not normally errors" do
+      http_response = stub_http_response_with( 'not_json.txt', 200 )
+      response = Zappos::Response.new( nil, nil, http_response )
+      response.error.should be_a_kind_of String
+    end
+        
+  end
 
 end

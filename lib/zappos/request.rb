@@ -9,7 +9,7 @@ module Zappos
   class Request #:nodoc:all
 
     attr_accessor :use_ssl, :response_class
-    attr_reader :query_params, :body_params
+    attr_reader :query_params, :body_params, :cookies
     
     def initialize( method, host, path, options={} )
       @method = method
@@ -39,6 +39,11 @@ module Zappos
       @body_params = Hashie::Mash.new( params )
     end
     
+    # Store cookies.. ditto
+    def cookies=(cookies)
+      @cookies = Hashie::Mash.new( cookies )
+    end
+    
     # A combination of body and query parameters.
     def params()
       params = query_params.clone()
@@ -63,6 +68,16 @@ module Zappos
       request.add_field("User-Agent", "zappos_rb v#{Zappos::Client.version}")
       if @body_params
         request.set_form_data( @body_params )
+      end
+      if cookies
+        cookie_pairs = []
+        cookies.each do |key,value|
+          next unless value
+          # Zappos uses this odd multi-value cookie format
+          escaped_value = value.split('&').collect { |v| CGI::escape(v) }.join('&')
+          cookie_pairs << "#{key}=#{escaped_value}"
+        end
+        request.add_field( "Cookie", cookie_pairs.join(';') ) if cookie_pairs.length > 0
       end
       request
     end

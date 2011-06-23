@@ -14,10 +14,10 @@ def file_fixture(filename)
   open(File.join(File.dirname(__FILE__), 'fixtures', "#{filename.to_s}")).read
 end
 
-def stub_http_response_with(filename)
+def stub_http_response_with(filename,code=200)
   format = filename.split('.').last.intern
   data = file_fixture(filename)
-  response = Net::HTTPOK.new( '1.1', 200, '' )
+  response = Net::HTTPResponse.new( '1.1', code, '' )
   response.stub!(:body).and_return(data)
   response
 end
