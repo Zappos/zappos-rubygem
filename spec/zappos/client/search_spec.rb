@@ -47,6 +47,23 @@ describe Zappos::Client::Search do
       results.batchResults.first.results.first.productName.should be_a String
       results.success?.should == true
     end
+    
+    # ===================
+    # Known bug in Patron
+    # ===================
+    
+    # it "can handle batch searches with ampersands" do
+    #   results = @zappos.search( 
+    #     :batch => [ 
+    #       { "filters" => { "zc1" => [ "Home" ], "zc2" => [ "Office & School Supplies", "Home Decor" ] }  }
+    #     ]
+    #   )
+    #   puts results.request_uri
+    #   results.should be_a_kind_of Zappos::Response
+    #   results.batchResults.should be_an Array
+    #   results.batchResults.first.results.first.productName.should be_a String
+    #   results.success?.should == true
+    # end
 
   end
   
@@ -123,6 +140,31 @@ describe Zappos::Client::Search do
       params.should == {
         :term => "green tennis shoes"
       }
+    end
+    
+  end
+  
+  context "encode_search_url" do
+    
+    it "can convert a search object into a URL" do
+      @zappos.encode_search_url({ "filters" => { "txCategoryFacet_ZetaCategories2" => [ "Kitchen" ] } }).should == 
+        '/search/null/filter/txCategoryFacet_ZetaCategories2/%22Kitchen%22'
+    end
+    
+    it "can handle search terms" do
+      @zappos.encode_search_url({ "term" => 'cat' }).should == '/search/cat'
+    end
+    
+    it "can handle complicated queries with multiple facet values" do
+      @zappos.encode_search_url({
+        "filters" => {
+          "isCouture" => ["false"],
+          "zc1" => ["Bags"],
+          "zc2" => ["Handbags"],
+          "zc3" => ["Hobos","Satchel","Cross Body","Totes","Shoulder Bags"],
+          "txAttrFacet_Theme" => ["Summer","Spring","Fall","Street"]
+        }
+      }).should == '/search/null/filter/isCouture/%22false%22/txAttrFacet_Theme/%22Summer+OR+Spring+OR+Fall+OR+Street%22/zc1/%22Bags%22/zc2/%22Handbags%22/zc3/%22Hobos+OR+Satchel+OR+Cross+Body+OR+Totes+OR+Shoulder+Bags%22'
     end
     
   end

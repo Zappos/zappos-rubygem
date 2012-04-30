@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "zappos"
-  s.version = "0.3.2"
+  s.version = "0.3.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pawel Szymczykowski"]
-  s.date = "2012-03-02"
+  s.date = "2012-04-30"
   s.description = "The Zappos API (called Patron) lets you hook into various Zappos functions such as product information, search, faceting and more."
   s.email = "pawel@zappos.com"
   s.extra_rdoc_files = [
@@ -57,7 +57,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/makenai/zappos"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.17"
   s.summary = "Ruby bindings for the Zappos API"
   s.test_files = [
     "spec/response_spec.rb",

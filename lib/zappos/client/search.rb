@@ -37,6 +37,27 @@ module Zappos
         query.delete_if {|key,value| !value }
       end
       
+      # The opposite of decode_search_url - takes a search query and turns it into a Zappos search URL
+      def encode_search_url( query_object )
+        return '/' unless query_object && query_object.is_a?( Hash )
+        
+        query = Hashie::Mash.new( query_object )
+        url_builder = [ 'search' ]
+
+        # Handle search term
+        url_builder << ( query[:term] ? CGI::escape( query[:term] ) : 'null' )
+        
+        if query[:filters] && query[:filters].is_a?( Hash )
+          url_builder << 'filter'
+          query[:filters].keys.sort.each do |key|
+            url_builder << CGI::escape( key )
+            url_builder << CGI::escape( '"'+ query[:filters][ key ].join(' OR ') + '"' )
+          end
+        end
+        
+        return '/' + url_builder.join('/')
+      end
+      
       private
       
       def parse_filters(filter_string)
