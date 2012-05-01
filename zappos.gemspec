@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "zappos"
-  s.version = "0.3.3"
+  s.version = "0.3.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pawel Szymczykowski"]
-  s.date = "2012-04-30"
+  s.date = "2012-05-01"
   s.description = "The Zappos API (called Patron) lets you hook into various Zappos functions such as product information, search, faceting and more."
   s.email = "pawel@zappos.com"
   s.extra_rdoc_files = [

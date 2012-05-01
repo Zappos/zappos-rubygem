@@ -47,23 +47,18 @@ describe Zappos::Client::Search do
       results.batchResults.first.results.first.productName.should be_a String
       results.success?.should == true
     end
-    
-    # ===================
-    # Known bug in Patron
-    # ===================
-    
-    # it "can handle batch searches with ampersands" do
-    #   results = @zappos.search( 
-    #     :batch => [ 
-    #       { "filters" => { "zc1" => [ "Home" ], "zc2" => [ "Office & School Supplies", "Home Decor" ] }  }
-    #     ]
-    #   )
-    #   puts results.request_uri
-    #   results.should be_a_kind_of Zappos::Response
-    #   results.batchResults.should be_an Array
-    #   results.batchResults.first.results.first.productName.should be_a String
-    #   results.success?.should == true
-    # end
+        
+    it "can handle batch searches with ampersands" do
+      results = @zappos.search( 
+        :batch => [ 
+          { "filters" => { "zc1" => [ "Home" ], "zc2" => [ "Office & School Supplies", "Home Decor" ] }  }
+        ]
+      )
+      results.should be_a_kind_of Zappos::Response
+      results.batchResults.should be_an Array
+      results.batchResults.first.results.first.productName.should be_a String
+      results.success?.should == true
+    end
 
   end
   

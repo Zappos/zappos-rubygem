@@ -99,7 +99,12 @@ module Zappos
       pairs = []
       params.each_pair do |key,value|
         if value.is_a?( Hash ) || value.is_a?( Array )
-          pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_json)}"
+          if key.to_s == 'batch'
+            # Weird fix for batch queries - DEV-24236
+            pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_json).gsub('%2526','%255Cu0026')}"
+          else
+            pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_json)}"
+          end
         else
           pairs << "#{CGI::escape(key.to_s)}=#{CGI::escape(value.to_s)}"
         end
