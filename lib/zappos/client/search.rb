@@ -65,7 +65,13 @@ module Zappos
         request = Zappos::Request.new( 'Head', 'www.zappos.com', uri.path )
         response = request.execute
         if response.is_a?( Net::HTTPRedirection )
-          return response['Location']
+          location = URI.parse( response['Location'] )
+          if uri.absolute? && location.relative?
+            uri.path = location.path
+            return uri.to_s
+          else
+            return location.to_s
+          end
         else
           return url
         end
