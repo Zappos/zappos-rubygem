@@ -1,3 +1,5 @@
+require 'uri'
+
 module Zappos
   class Client
     module Search
@@ -56,6 +58,19 @@ module Zappos
         end
         
         return '/' + url_builder.join('/')
+      end
+
+      def search_url_to_zso( url )
+        uri = URI.parse( url )
+        request = Zappos::Request.new( 'Head', 'www.zappos.com', uri.path )
+        response = request.execute
+        if response.is_a?( Net::HTTPRedirection )
+          return response['Location']
+        else
+          return url
+        end
+      rescue Exception
+        return url
       end
       
       private

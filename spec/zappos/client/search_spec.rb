@@ -163,5 +163,19 @@ describe Zappos::Client::Search do
     end
     
   end
+
+  context "search_url_to_zso" do
+
+    it "can take a relative search url and return a .zso link" do
+      url = @zappos.search_url_to_zso('/search/null/filter/txCategoryFacet_ZetaCategories2/%22Kitchen%22')
+      url.should match(/\.zso$/)
+    end
+
+    it "can take an absolute search url and return a .zso link" do
+      url = @zappos.search_url_to_zso('http://www.zappos.com/search/null/filter/txCategoryFacet_ZetaCategories2/%22Kitchen%22')
+      url.should match(/\.zso$/)
+    end
+
+  end
     
 end
