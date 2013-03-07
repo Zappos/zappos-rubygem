@@ -17,7 +17,7 @@ module Zappos
         { :error => "JSON Parser Error:\n#{@response.body}" }
       end
       unless data.is_a?( Hash )
-        data = { response: data }
+        data = { response => data }
       end
       @data = Hashie::Mash.new( data )
     end
