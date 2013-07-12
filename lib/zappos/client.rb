@@ -5,10 +5,12 @@ module Zappos
   class Client < BaseClient
     
     BASE_URL = 'api.zappos.com'
+    BASE_PORT = 80
 
     def initialize(key, options={})
       @key = key
       @base_url = options[:base_url] || BASE_URL
+      @base_port = options[:base_port] || BASE_PORT
     end
 
     # Return the version number of this library

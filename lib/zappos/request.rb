@@ -11,9 +11,10 @@ module Zappos
     attr_accessor :use_ssl, :response_class
     attr_reader :query_params, :body_params, :cookies
     
-    def initialize( method, host, path, options={} )
+    def initialize( method, host, port, path, options={} )
       @method = method
       @host   = host
+      @port   = port
       @path   = path
     end
     
@@ -21,6 +22,7 @@ module Zappos
     def uri()
       uri = ( use_ssl ? URI::HTTPS : URI::HTTP ).build(
         :host   => @host,
+        :port   => @port,
         :path   => @path
       )
       if @query_params

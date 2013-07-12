@@ -32,7 +32,7 @@ module Zappos
 
     # Create a request
     def request( method, endpoint, options={} )
-      request = Zappos::Request.new( method, @base_url, endpoint )
+      request = Zappos::Request.new( method, @base_url, @base_port, endpoint )
       if options[:ssl]
         request.use_ssl = true
       end
